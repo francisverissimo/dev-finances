@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-  @apply font-inter h-screen bg-gradient-to-t from-slate-500 via-slate-300 to-slate-300 bg-no-repeat;
+  @apply font-inter;
 }
