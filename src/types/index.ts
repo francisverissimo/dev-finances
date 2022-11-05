@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface TransactionInterace {
+export interface Transaction {
   id: string;
   description: string;
   value: number;

@@ -20,7 +20,7 @@ import {
 
 interface FormFieldValues {
   description: string;
-  type: "expense" | "incoming";
+  type: "expense" | "income";
   value: number;
   date: Moment;
 }
@@ -35,6 +35,28 @@ export function ModalAddTransaction({
   handleClose,
 }: ModalAddTransactionInterface) {
   const [form] = useForm();
+
+  async function handleAddNewTransaction(data: FormFieldValues) {
+    const docRef = doc(db, "users", "francissv97@gmail.com");
+    const transactionId = generateTransactionID();
+    const convertedDate = passDateInMomentFormatToDateFormat(data.date);
+    const value = data.type == "expense" ? data.value * -100 : data.value * 100;
+
+    await setDoc(
+      docRef,
+      {
+        [`${transactionId}`]: {
+          id: transactionId,
+          description: data.description,
+          date: convertedDate,
+          value: value,
+        },
+      },
+      { merge: true }
+    );
+
+    handleCloseModal();
+  }
 
   function handleSubmitForm() {
     const { description, type, value, date } =
@@ -53,28 +75,6 @@ export function ModalAddTransaction({
     form.resetFields();
   }
 
-  async function handleAddNewTransaction(data: FormFieldValues) {
-    const docRef = doc(db, "users", "francissv97@gmail.com");
-
-    const transactionId = generateTransactionID();
-
-    const convertedDate = passDateInMomentFormatToDateFormat(data.date);
-
-    await setDoc(
-      docRef,
-      {
-        [`${transactionId}`]: {
-          ...data,
-          id: transactionId,
-          date: convertedDate,
-        },
-      },
-      { merge: true }
-    );
-
-    handleCloseModal();
-  }
-
   return (
     <Modal
       open={open}
@@ -85,12 +85,20 @@ export function ModalAddTransaction({
       bodyStyle={{ paddingInline: "24px", paddingBlock: "0 24px" }}
       width={544}
     >
-      <Form form={form} layout="vertical" initialValues={{ type: "expense" }}>
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{ type: "expense" }}
+        onFinish={handleSubmitForm}
+      >
         <Divider orientation="left" plain>
           <span className="text-sm text-slate-700">Descrição</span>
         </Divider>
 
-        <Form.Item name="description">
+        <Form.Item
+          name="description"
+          rules={[{ required: true, message: "Campo obrigatório." }]}
+        >
           <Input />
         </Form.Item>
 
@@ -98,12 +106,15 @@ export function ModalAddTransaction({
           <span className="text-sm text-slate-700">Transação</span>
         </Divider>
 
-        <Form.Item name="type">
+        <Form.Item
+          name="type"
+          rules={[{ required: true, message: "Campo obrigatório." }]}
+        >
           <Radio.Group>
             <Radio value="expense" className="text-red-600 font-medium">
               Saída
             </Radio>
-            <Radio value="incoming" className="text-green-700 font-medium">
+            <Radio value="income" className="text-green-700 font-medium">
               Entrada
             </Radio>
           </Radio.Group>
@@ -113,13 +124,19 @@ export function ModalAddTransaction({
           <span className="text-sm text-slate-700">Valor</span>
         </Divider>
 
-        <Form.Item name="value">
-          <InputNumber type="number" />
+        <Form.Item
+          name="value"
+          rules={[{ required: true, message: "Campo obrigatório." }]}
+        >
+          <InputNumber type="number" min={0} />
         </Form.Item>
 
         <Divider />
 
-        <Form.Item name="date">
+        <Form.Item
+          name="date"
+          rules={[{ required: true, message: "Campo obrigatório." }]}
+        >
           <DatePicker locale={locale} />
         </Form.Item>
 
@@ -135,7 +152,7 @@ export function ModalAddTransaction({
           </button>
 
           <button
-            onClick={handleSubmitForm}
+            onClick={form.submit}
             className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 transition text-xl text-zinc-100 px-4 rounded"
           >
             <FloppyDisk size={26} />

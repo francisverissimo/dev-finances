@@ -3,14 +3,12 @@ import { TrashSimple } from "phosphor-react";
 
 interface TransactionCardProps {
   description: string;
-  type: "expense" | "incoming";
   value: number;
   date: Timestamp;
 }
 
 export function TransactionCard({
   description,
-  type,
   date,
   value,
 }: TransactionCardProps) {
@@ -18,13 +16,13 @@ export function TransactionCard({
     "pt-BR"
   );
 
-  const valueConvertedToMoney = value.toLocaleString("pt-BR", {
+  const valueConvertedToMoney = (value / 100).toLocaleString("pt-BR", {
     style: "currency",
     currency: "BRL",
   });
 
   return (
-    <div className="flex flex-col gap-2 bg-slate-200 p-4 rounded shadow-lg">
+    <div className="flex flex-col gap-2 bg-slate-200 p-4 rounded-md shadow-lg">
       <span className="text-zinc-600 text-lg font-medium break-words">
         {description}
       </span>
@@ -33,7 +31,7 @@ export function TransactionCard({
         <div className="flex gap-4 items-center">
           <span
             className={`${
-              type == "incoming" ? "text-green-700" : "text-red-700"
+              value >= 0 ? "text-green-700" : "text-red-700"
             } text-base font-medium`}
           >
             {valueConvertedToMoney}
