@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useForm } from "antd/lib/form/Form";
+import locale from "antd/lib/date-picker/locale/pt_BR";
 import {
   DatePicker,
   Divider,
@@ -7,23 +10,9 @@ import {
   Modal,
   Radio,
 } from "antd";
-import { useForm } from "antd/lib/form/Form";
-import locale from "antd/lib/date-picker/locale/pt_BR";
+import { AddTransactionFormFieldValues } from "../types";
+import { addTransaction } from "../hooks/useFirestore";
 import { FloppyDisk, X } from "phosphor-react";
-import { Moment } from "moment";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { db } from "../services/firebase";
-import {
-  generateTransactionID,
-  passDateInMomentFormatToDateFormat,
-} from "../utils";
-
-interface FormFieldValues {
-  description: string;
-  type: "expense" | "income";
-  value: number;
-  date: Moment;
-}
 
 interface ModalAddTransactionInterface {
   open: boolean;
@@ -36,38 +25,10 @@ export function ModalAddTransaction({
 }: ModalAddTransactionInterface) {
   const [form] = useForm();
 
-  async function handleAddNewTransaction(data: FormFieldValues) {
-    const docRef = doc(db, "users", "francissv97@gmail.com");
-    const transactionId = generateTransactionID();
-    const convertedDate = passDateInMomentFormatToDateFormat(data.date);
-    const value = data.type == "expense" ? data.value * -100 : data.value * 100;
-
-    await setDoc(
-      docRef,
-      {
-        [`${transactionId}`]: {
-          id: transactionId,
-          description: data.description,
-          date: convertedDate,
-          value: value,
-        },
-      },
-      { merge: true }
-    );
-
+  async function handleSubmitForm() {
+    const fieldValues = form.getFieldsValue() as AddTransactionFormFieldValues;
+    addTransaction(fieldValues);
     handleCloseModal();
-  }
-
-  function handleSubmitForm() {
-    const { description, type, value, date } =
-      form.getFieldsValue() as FormFieldValues;
-
-    handleAddNewTransaction({
-      value,
-      description,
-      type,
-      date,
-    });
   }
 
   function handleCloseModal() {
@@ -152,7 +113,7 @@ export function ModalAddTransaction({
           </button>
 
           <button
-            onClick={form.submit}
+            onClick={() => form.submit()}
             className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 transition text-xl text-zinc-100 px-4 rounded"
           >
             <FloppyDisk size={26} />
