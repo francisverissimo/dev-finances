@@ -60,11 +60,11 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
           </span>
         </div>
 
-        <button className="place-self-end" onClick={showConfirmDeleteJob}>
-          <TrashSimple
-            className="text-red-700 transition hover:text-red-500 hover:-translate-y-1"
-            size={32}
-          />
+        <button
+          className="place-self-end text-red-700 py-1 px-2 border border-transparent transition rounded-full hover:text-red-500 hover:border-red-500"
+          onClick={showConfirmDeleteJob}
+        >
+          <TrashSimple size={32} />
         </button>
       </div>
     </div>
