@@ -1,5 +1,5 @@
 {
-  "name": "dev-finances-react",
+  "name": "97-dev-finances",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,9 +11,11 @@
   "dependencies": {
     "antd": "^4.24.0",
     "firebase": "^9.13.0",
+    "lottie-react": "^2.3.1",
     "phosphor-react": "^1.4.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.22",
