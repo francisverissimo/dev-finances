@@ -2,13 +2,6 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { signInWithEmailAndPassword, signOut, User } from "firebase/auth";
 import { auth } from "../services/firebase";
 
-// export interface UserAuth {
-//   id: string;
-//   name: string;
-//   avatar: string;
-//   email: string | null;
-// }
-
 interface AuthContextType {
   user: User | null | undefined;
   loginWithEmailAndPassword: (email: string, password: string) => Promise<void>;
@@ -27,11 +20,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function loginWithEmailAndPassword(email: string, password: string) {
     const result = await signInWithEmailAndPassword(auth, email, password);
 
-    if (result.user) {
-      console.log(result.user);
-
-      setUser(result.user);
-    }
+    if (result.user) setUser(result.user);
   }
 
   async function logOut() {

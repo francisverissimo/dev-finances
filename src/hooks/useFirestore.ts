@@ -1,13 +1,40 @@
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../services/firebase";
+import { message } from "antd";
 import { AddTransactionFormFieldValues, Transaction } from "../types";
 import {
   generateTransactionID,
   passDateInMomentFormatToDateFormat,
 } from "../utils";
 
-export async function addTransaction(data: AddTransactionFormFieldValues) {
-  const docRef = doc(db, "users", "francissv97@gmail.com");
+export async function createNewUserDocumentInFirestore(userEmail: string) {
+  try {
+    const docRef = doc(db, "users", userEmail);
+    const docSnap = await getDoc(docRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(doc(db, "users", userEmail), {
+        transactions: [],
+      });
+    }
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    message.error("Erro ao tentar criar base de dados para este usuário..!");
+  }
+}
+
+export async function addTransaction(
+  userEmail: string,
+  data: AddTransactionFormFieldValues
+) {
+  const docRef = doc(db, "users", userEmail);
   const id = await generateTransactionID();
   const description = data.description;
   const date = await passDateInMomentFormatToDateFormat(data.date);
@@ -23,8 +50,8 @@ export async function addTransaction(data: AddTransactionFormFieldValues) {
   }).catch((error) => console.error(error));
 }
 
-export async function removeTransaction(data: Transaction) {
-  const docRef = doc(db, "users", "francissv97@gmail.com");
+export async function removeTransaction(userEmail: string, data: Transaction) {
+  const docRef = doc(db, "users", userEmail);
 
   await updateDoc(docRef, {
     transactions: arrayRemove(data),

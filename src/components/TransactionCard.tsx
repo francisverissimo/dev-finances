@@ -2,6 +2,7 @@ import { Modal } from "antd";
 import { Transaction } from "../types";
 import { removeTransaction } from "../hooks/useFirestore";
 import { TrashSimple } from "phosphor-react";
+import { useAuth } from "../hooks/useAuth";
 
 interface TransactionCardProps {
   transaction: Transaction;
@@ -9,6 +10,7 @@ interface TransactionCardProps {
 
 export function TransactionCard({ transaction }: TransactionCardProps) {
   const { confirm } = Modal;
+  const { user } = useAuth();
 
   const dateConvertedToDate = new Date(
     transaction.date.toMillis()
@@ -36,7 +38,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
       cancelText: "Cancelar",
       okText: "EXCLUIR",
       okType: "danger",
-      onOk: () => removeTransaction(transaction),
+      onOk: () => user?.email && removeTransaction(user.email, transaction),
     });
   };
 

@@ -13,6 +13,7 @@ import {
 import { AddTransactionFormFieldValues } from "../types";
 import { addTransaction } from "../hooks/useFirestore";
 import { FloppyDisk, X } from "phosphor-react";
+import { useAuth } from "../hooks/useAuth";
 
 interface ModalAddTransactionInterface {
   open: boolean;
@@ -24,10 +25,11 @@ export function ModalAddTransaction({
   handleClose,
 }: ModalAddTransactionInterface) {
   const [form] = useForm();
+  const { user } = useAuth();
 
   async function handleSubmitForm() {
     const fieldValues = form.getFieldsValue() as AddTransactionFormFieldValues;
-    addTransaction(fieldValues);
+    user?.email && addTransaction(user.email, fieldValues);
     handleCloseModal();
   }
 

@@ -8,6 +8,7 @@ import { TransactionCard } from "../components/TransactionCard";
 import { Numbers } from "../components/Numbers";
 import { Footer } from "../components/Footer";
 import { CircleNotch, Plus } from "phosphor-react";
+import { useAuth } from "../hooks/useAuth";
 
 export function DashboardPage() {
   const [openModalAddTransaction, setOpenModalAddTransaction] = useState(false);
@@ -15,6 +16,8 @@ export function DashboardPage() {
   const [incomes, setIncomes] = useState<number>(0);
   const [expenses, setExpenses] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { user } = useAuth();
 
   function handleOpenModalAddTransaction() {
     setOpenModalAddTransaction(true);
@@ -25,9 +28,8 @@ export function DashboardPage() {
   }
 
   useEffect(() => {
-    const unsub = onSnapshot(
-      doc(db, "users", "francissv97@gmail.com"),
-      (doc) => {
+    if (user) {
+      const unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
         let incomeCount = 0;
         let expenseCount = 0;
 
@@ -51,10 +53,10 @@ export function DashboardPage() {
         setIncomes(incomeCount);
         setExpenses(expenseCount);
         setIsLoading(false);
-      }
-    );
+      });
 
-    return unsub;
+      return unsub;
+    }
   }, []);
 
   return (
