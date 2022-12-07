@@ -60,9 +60,9 @@ export function LogInPage() {
               />
             </Form.Item>
 
-            <p className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700">
+            <button className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700">
               Esqueceu a senha?
-            </p>
+            </button>
 
             <Form.Item>
               <button

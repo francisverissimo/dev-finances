@@ -9,15 +9,16 @@ import { Numbers } from "../components/Numbers";
 import { Footer } from "../components/Footer";
 import { CircleNotch, Plus } from "phosphor-react";
 import { useAuth } from "../hooks/useAuth";
+import { message } from "antd";
 
 export function DashboardPage() {
   const [openModalAddTransaction, setOpenModalAddTransaction] = useState(false);
   const [transactions, setTransactios] = useState<Transaction[]>();
   const [incomes, setIncomes] = useState<number>(0);
   const [expenses, setExpenses] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
 
   function handleOpenModalAddTransaction() {
     setOpenModalAddTransaction(true);
@@ -28,28 +29,33 @@ export function DashboardPage() {
   }
 
   useEffect(() => {
+    setIsLoading(true);
+
     if (user) {
       const unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
-        let incomeCount = 0;
-        let expenseCount = 0;
-
-        const data = doc.data() as { transactions: Transaction[] };
-
-        setTransactios(
-          data.transactions.sort(
-            (a: Transaction, b: Transaction) =>
-              a.date.toMillis() - b.date.toMillis()
-          )
-        );
-
-        for (let i in data.transactions) {
-          if (data.transactions[i].value >= 0) {
-            incomeCount += data.transactions[i].value / 100;
-          } else {
-            expenseCount += data.transactions[i].value / 100;
-          }
+        if (!doc.exists()) {
+          message.error(`Erro ao carregar as documento deste usuário.:`);
+          return logOut();
         }
 
+        let incomeCount = 0;
+        let expenseCount = 0;
+        const data = doc.data() as { transactions: Transaction[] };
+        if (data.transactions) {
+          setTransactios(
+            data.transactions.sort(
+              (a: Transaction, b: Transaction) =>
+                a.date.toMillis() - b.date.toMillis()
+            )
+          );
+          for (let i in data.transactions) {
+            if (data.transactions[i].value >= 0) {
+              incomeCount += data.transactions[i].value / 100;
+            } else {
+              expenseCount += data.transactions[i].value / 100;
+            }
+          }
+        }
         setIncomes(incomeCount);
         setExpenses(expenseCount);
         setIsLoading(false);
@@ -87,9 +93,17 @@ export function DashboardPage() {
             />
           ) : (
             transactions &&
-            transactions.map((transaction) => (
-              <TransactionCard key={transaction.id} transaction={transaction} />
-            ))
+            transactions.map((transaction) => {
+              return (
+                transaction.date.toDate().getMonth() ==
+                  new Date().getMonth() && (
+                  <TransactionCard
+                    key={transaction.id}
+                    transaction={transaction}
+                  />
+                )
+              );
+            })
           )}
         </div>
       </div>
