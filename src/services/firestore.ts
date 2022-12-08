@@ -35,10 +35,10 @@ export async function createNewUserDocumentInFirestore(
 }
 
 export async function addTransaction(
-  userEmail: string,
+  userId: string,
   data: AddTransactionFormFieldValues
 ) {
-  const docRef = doc(db, "users", userEmail);
+  const docRef = doc(db, "users", userId);
   const id = await generateTransactionID();
   const description = data.description;
   const date = await passDateInMomentFormatToDateFormat(data.date);
@@ -54,8 +54,8 @@ export async function addTransaction(
   }).catch((error) => console.error(error));
 }
 
-export async function removeTransaction(userEmail: string, data: Transaction) {
-  const docRef = doc(db, "users", userEmail);
+export async function removeTransaction(userId: string, data: Transaction) {
+  const docRef = doc(db, "users", userId);
 
   await updateDoc(docRef, {
     transactions: arrayRemove(data),
