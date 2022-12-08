@@ -1,6 +1,6 @@
 import { Modal } from "antd";
 import { Transaction } from "../types";
-import { removeTransaction } from "../hooks/useFirestore";
+import { removeTransaction } from "../services/firestore";
 import { TrashSimple } from "phosphor-react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -38,7 +38,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
       cancelText: "Cancelar",
       okText: "EXCLUIR",
       okType: "danger",
-      onOk: () => user?.email && removeTransaction(user.email, transaction),
+      onOk: () => user && removeTransaction(user.uid, transaction),
     });
   };
 
