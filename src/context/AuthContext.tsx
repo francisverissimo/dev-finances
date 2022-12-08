@@ -1,10 +1,24 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { signInWithEmailAndPassword, signOut, User } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  User,
+  updateProfile,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { auth } from "../services/firebase";
+import { createNewUserDocumentInFirestore } from "../services/firestore";
 
 interface AuthContextType {
   user: User | null | undefined;
   loginWithEmailAndPassword: (email: string, password: string) => Promise<void>;
+  signUpWithEmailAndPassword: (
+    email: string,
+    password: string,
+    displayName: string
+  ) => Promise<void>;
+  sendEmailToResetPassword: (email: string) => Promise<void>;
   logOut: () => Promise<void>;
 }
 
@@ -23,6 +37,24 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     if (result.user) setUser(result.user);
   }
 
+  async function signUpWithEmailAndPassword(
+    email: string,
+    password: string,
+    displayName: string
+  ) {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+
+    if (result.user) {
+      await updateProfile(result.user, { displayName });
+      await createNewUserDocumentInFirestore(result.user.uid, email);
+      setUser(result.user);
+    }
+  }
+
+  async function sendEmailToResetPassword(email: string) {
+    await sendPasswordResetEmail(auth, email);
+  }
+
   async function logOut() {
     try {
       await signOut(auth);
@@ -35,12 +67,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        // const { displayName, photoURL, uid, email } = user;
-
-        // if (!displayName || !photoURL) {
-        //   throw new Error("Missing information from Google account.");
-        // }
-
         setUser(user);
       } else {
         setUser(null);
@@ -51,7 +77,15 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loginWithEmailAndPassword, logOut }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loginWithEmailAndPassword,
+        signUpWithEmailAndPassword,
+        sendEmailToResetPassword,
+        logOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
