@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 NOTES.md
+
+src/assets/favicons/
