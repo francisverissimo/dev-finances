@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { User } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { logIn, register, forgotPassword, logOut } from "../services/auth";
+import { login, register, forgotPassword, logout } from "../services/auth";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -27,7 +27,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const navigate = useNavigate();
 
   async function handleSignIn(email: string, password: string) {
-    const user = await logIn(email, password);
+    const user = await login(email, password);
     user && setUser(user);
   }
 
@@ -49,7 +49,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
   }
 
   async function handleSignOut() {
-    logOut();
+    logout();
     setUser(null);
   }
 
