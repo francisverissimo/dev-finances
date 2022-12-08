@@ -6,7 +6,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "../services/firebase";
+import { db } from "./firebase";
 import { message } from "antd";
 import { AddTransactionFormFieldValues, Transaction } from "../types";
 import {
@@ -14,13 +14,17 @@ import {
   passDateInMomentFormatToDateFormat,
 } from "../utils";
 
-export async function createNewUserDocumentInFirestore(userEmail: string) {
+export async function createNewUserDocumentInFirestore(
+  id: string,
+  email: string
+) {
   try {
-    const docRef = doc(db, "users", userEmail);
+    const docRef = doc(db, "users", id);
     const docSnap = await getDoc(docRef);
 
     if (!docSnap.exists()) {
-      await setDoc(doc(db, "users", userEmail), {
+      await setDoc(doc(db, "users", id), {
+        email: email,
         transactions: [],
       });
     }
