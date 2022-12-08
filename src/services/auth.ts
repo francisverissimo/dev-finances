@@ -1,17 +1,24 @@
 import { message } from "antd";
+import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
   sendPasswordResetEmail,
+  User,
 } from "firebase/auth";
 import { auth } from "./firebase";
 import { addUserFirestore } from "./firestore";
 
-export async function logIn(email: string, password: string) {
-  const result = await signInWithEmailAndPassword(auth, email, password);
-  return result.user && result.user;
+export async function login(email: string, password: string) {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result.user && result.user;
+  } catch (err) {
+    const error = err as FirebaseError;
+    console.log(error);
+  }
 }
 
 export async function register(
@@ -19,13 +26,30 @@ export async function register(
   password: string,
   displayName: string
 ) {
-  const result = await createUserWithEmailAndPassword(auth, email, password);
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
 
-  if (result.user) {
-    await updateProfile(result.user, { displayName });
-    await addUserFirestore(result.user.uid, email);
-    message.success("Usuário criado com sucesso.!");
-    return result.user;
+    if (result.user) {
+      await updateProfile(result.user, { displayName });
+      await addUserFirestore(result.user.uid, email);
+      message.success("Usuário criado com sucesso.!");
+      return result.user;
+    }
+  } catch (err) {
+    const error = err as FirebaseError;
+    console.log(error);
+
+    if (error.code == "auth/weak-password") {
+      console.error(error);
+      message.error("A senha deve ter pelo menos 6 caracteres.");
+    }
+
+    if (error.code == "auth/email-already-in-use") {
+      console.error(error);
+      message.error("Este email já está sendo usado.");
+    }
+
+    return null;
   }
 }
 
@@ -43,6 +67,6 @@ export async function forgotPassword(email: string) {
     });
 }
 
-export async function logOut() {
-  return await signOut(auth);
+export async function logout() {
+  return await signOut(auth).catch((error) => console.log(error));
 }
