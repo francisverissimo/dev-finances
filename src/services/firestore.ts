@@ -14,7 +14,7 @@ import {
   passDateInMomentFormatToDateFormat,
 } from "../utils";
 
-export async function createNewUserDocumentInFirestore(
+export async function addUserFirestore(
   id: string,
   email: string
 ) {
