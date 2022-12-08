@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useForm } from "antd/lib/form/Form";
 import locale from "antd/lib/date-picker/locale/pt_BR";
 import {
@@ -15,7 +14,7 @@ import { addTransaction } from "../services/firestore";
 import { FloppyDisk, X } from "phosphor-react";
 import { useAuth } from "../hooks/useAuth";
 
-interface ModalAddTransactionInterface {
+interface ModalAddTransactionProps {
   open: boolean;
   handleClose: () => void;
 }
@@ -23,7 +22,7 @@ interface ModalAddTransactionInterface {
 export function ModalAddTransaction({
   open,
   handleClose,
-}: ModalAddTransactionInterface) {
+}: ModalAddTransactionProps) {
   const [form] = useForm();
   const { user } = useAuth();
 

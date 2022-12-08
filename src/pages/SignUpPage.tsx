@@ -14,16 +14,14 @@ interface SignUpFieldValues {
 
 export function SignUpPage() {
   const [form] = Form.useForm();
-  const { signUpWithEmailAndPassword } = useAuth();
+  const { handleNewAccount } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignUp() {
     const { displayName, email, password } =
       form.getFieldsValue() as SignUpFieldValues;
 
-    await signUpWithEmailAndPassword(email, password, displayName).then(() =>
-      navigate("/")
-    );
+    await handleNewAccount(email, password, displayName);
   }
 
   return (

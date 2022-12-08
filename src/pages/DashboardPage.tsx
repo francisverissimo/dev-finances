@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { message } from "antd";
 import { Transaction } from "../types";
+import { useAuth } from "../hooks/useAuth";
 import { Header } from "../components/Header";
 import { ModalAddTransaction } from "../components/ModalAddTransaction";
 import { TransactionCard } from "../components/TransactionCard";
 import { Numbers } from "../components/Numbers";
 import { Footer } from "../components/Footer";
 import { CircleNotch, Plus } from "phosphor-react";
-import { useAuth } from "../hooks/useAuth";
-import { message } from "antd";
 
 export function DashboardPage() {
   const [openModalAddTransaction, setOpenModalAddTransaction] = useState(false);
@@ -18,7 +18,7 @@ export function DashboardPage() {
   const [expenses, setExpenses] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, logOut } = useAuth();
+  const { user, handleSignOut } = useAuth();
 
   function handleOpenModalAddTransaction() {
     setOpenModalAddTransaction(true);
@@ -32,22 +32,24 @@ export function DashboardPage() {
     setIsLoading(true);
 
     if (user) {
-      const unsub = onSnapshot(doc(db, "users", `${user.email}`), (doc) => {
+      const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (!doc.exists()) {
-          message.error(`Erro ao carregar as documento deste usuário.:`);
-          return logOut();
+          message.error(`Erro ao carregar dados deste usuário.:`);
+          return handleSignOut();
         }
 
         let incomeCount = 0;
         let expenseCount = 0;
         const data = doc.data() as { transactions: Transaction[] };
+
         if (data.transactions) {
           setTransactios(
             data.transactions.sort(
               (a: Transaction, b: Transaction) =>
-                a.date.toMillis() - b.date.toMillis()
+                b.date.toMillis() - a.date.toMillis()
             )
           );
+
           for (let i in data.transactions) {
             if (data.transactions[i].value >= 0) {
               incomeCount += data.transactions[i].value / 100;

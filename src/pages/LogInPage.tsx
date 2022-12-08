@@ -12,12 +12,12 @@ interface LoginPageFieldValues {
 
 export function LogInPage() {
   const [form] = Form.useForm();
-  const { loginWithEmailAndPassword } = useAuth();
+  const { handleSignIn } = useAuth();
   const navigate = useNavigate();
 
-  async function handleSignIn() {
+  async function handleSubmit() {
     const { email, password } = form.getFieldsValue() as LoginPageFieldValues;
-    await loginWithEmailAndPassword(email, password);
+    await handleSignIn(email, password);
   }
 
   return (
@@ -32,7 +32,7 @@ export function LogInPage() {
           <Form
             form={form}
             layout="vertical"
-            onFinish={handleSignIn}
+            onFinish={handleSubmit}
             className="flex flex-col gap-2"
           >
             <Form.Item
