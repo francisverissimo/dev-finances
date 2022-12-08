@@ -3,6 +3,7 @@ import { Footer } from "../components/Footer";
 import { Logo } from "../components/Logo";
 import { useAuth } from "../hooks/useAuth";
 import { User, Lock } from "phosphor-react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginPageFieldValues {
   email: string;
@@ -12,6 +13,7 @@ interface LoginPageFieldValues {
 export function LogInPage() {
   const [form] = Form.useForm();
   const { loginWithEmailAndPassword } = useAuth();
+  const navigate = useNavigate();
 
   async function handleSignIn() {
     const { email, password } = form.getFieldsValue() as LoginPageFieldValues;
@@ -60,7 +62,10 @@ export function LogInPage() {
               />
             </Form.Item>
 
-            <button className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700">
+            <button
+              onClick={() => navigate("/forgot")}
+              className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700"
+            >
               Esqueceu a senha?
             </button>
 
@@ -80,10 +85,10 @@ export function LogInPage() {
             </p>
 
             <button
-              onClick={() => {}}
+              onClick={() => navigate("/signup")}
               className="text-slate-700 hover:text-emerald-700 font-medium transition"
             >
-              Cadastrar
+              Cadastre-se
             </button>
           </Form>
         </div>
