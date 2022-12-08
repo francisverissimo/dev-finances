@@ -11,7 +11,7 @@ import {
   Radio,
 } from "antd";
 import { AddTransactionFormFieldValues } from "../types";
-import { addTransaction } from "../hooks/useFirestore";
+import { addTransaction } from "../services/firestore";
 import { FloppyDisk, X } from "phosphor-react";
 import { useAuth } from "../hooks/useAuth";
 
@@ -29,7 +29,7 @@ export function ModalAddTransaction({
 
   async function handleSubmitForm() {
     const fieldValues = form.getFieldsValue() as AddTransactionFormFieldValues;
-    user?.email && addTransaction(user.email, fieldValues);
+    user && addTransaction(user.uid, fieldValues);
     handleCloseModal();
   }
 
