@@ -17,7 +17,7 @@ export function LogInPage() {
 
   async function handleSubmit() {
     const { email, password } = form.getFieldsValue() as LoginPageFieldValues;
-    await handleSignIn(email, password);
+    await handleSignIn(email.trim(), password);
   }
 
   return (

@@ -13,7 +13,7 @@ export function ForgotPage() {
   async function handleForgot() {
     const email = form.getFieldValue("email");
 
-    await handleForgotPassword(email);
+    await handleForgotPassword(email.trim());
   }
 
   return (

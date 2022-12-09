@@ -6,6 +6,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Modal,
   Radio,
 } from "antd";
@@ -28,6 +29,9 @@ export function ModalAddTransaction({
 
   async function handleSubmitForm() {
     const fieldValues = form.getFieldsValue() as AddTransactionFormFieldValues;
+    if (fieldValues.value >= 0)
+      return message.warn("Transação sem valor algum.:");
+
     user && addTransaction(user.uid, fieldValues);
     handleCloseModal();
   }
@@ -59,7 +63,9 @@ export function ModalAddTransaction({
 
         <Form.Item
           name="description"
-          rules={[{ required: true, message: "Campo obrigatório." }]}
+          rules={[
+            { required: true, message: "Digite uma descrição, por favor.:" },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -88,7 +94,13 @@ export function ModalAddTransaction({
 
         <Form.Item
           name="value"
-          rules={[{ required: true, message: "Campo obrigatório." }]}
+          rules={[
+            {
+              required: true,
+              message: "Digite um número, por favor.:",
+            },
+            { type: "number" },
+          ]}
         >
           <InputNumber type="number" min={0} />
         </Form.Item>
@@ -97,7 +109,9 @@ export function ModalAddTransaction({
 
         <Form.Item
           name="date"
-          rules={[{ required: true, message: "Campo obrigatório." }]}
+          rules={[
+            { required: true, message: "Selecione uma data, por favor.:" },
+          ]}
         >
           <DatePicker locale={locale} />
         </Form.Item>
@@ -106,6 +120,7 @@ export function ModalAddTransaction({
 
         <div className="flex gap-4 justify-end">
           <button
+            type="button"
             onClick={handleCloseModal}
             className="flex items-center gap-1 bg-red-600 hover:bg-red-700 transition text-xl text-zinc-100 p-2 rounded"
           >
@@ -114,6 +129,7 @@ export function ModalAddTransaction({
           </button>
 
           <button
+            type="button"
             onClick={() => form.submit()}
             className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 transition text-xl text-zinc-100 px-4 rounded"
           >

@@ -21,7 +21,7 @@ export function SignUpPage() {
     const { displayName, email, password } =
       form.getFieldsValue() as SignUpFieldValues;
 
-    await handleNewAccount(email, password, displayName);
+    await handleNewAccount(email.trim(), password, displayName.trim());
   }
 
   return (

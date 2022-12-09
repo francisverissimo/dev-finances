@@ -17,7 +17,11 @@ export async function login(email: string, password: string) {
     return result.user && result.user;
   } catch (err) {
     const error = err as FirebaseError;
-    console.log(error);
+    console.error(error);
+
+    if (error.code == "auth/invalid-email") {
+      message.error("Email inválido.");
+    }
   }
 }
 
@@ -37,15 +41,13 @@ export async function register(
     }
   } catch (err) {
     const error = err as FirebaseError;
-    console.log(error);
+    console.error(error);
 
     if (error.code == "auth/weak-password") {
-      console.error(error);
       message.error("A senha deve ter pelo menos 6 caracteres.");
     }
 
     if (error.code == "auth/email-already-in-use") {
-      console.error(error);
       message.error("Este email já está sendo usado.");
     }
 
@@ -59,14 +61,18 @@ export async function forgotPassword(email: string) {
       message.info("Enviamos a você um e-mail de redefinição de senha.")
     )
     .catch((error) => {
-      console.error;
+      console.error(error);
+
       if (error.code == "auth/user-not-found") {
-        console.error(error);
-        return message.error("Não encontramos nenhum usuário com este email.");
+        return message.error("Não encontramos nenhum usuário com este email.:");
+      }
+
+      if (error.code == "auth/invalid-email") {
+        return message.error("Email inválido.:");
       }
     });
 }
 
 export async function logout() {
-  return await signOut(auth).catch((error) => console.log(error));
+  return await signOut(auth).catch((error) => console.error(error));
 }
