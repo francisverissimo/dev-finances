@@ -7,3 +7,7 @@ export async function generateTransactionID() {
 export async function passDateInMomentFormatToDateFormat(date: Moment) {
   return new Date(date.format());
 }
+
+export function validateTransactionValue(amount: number) {
+  return parseFloat(amount.toFixed(2));
+}

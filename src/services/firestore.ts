@@ -12,12 +12,10 @@ import { AddTransactionFormFieldValues, Transaction } from "../types";
 import {
   generateTransactionID,
   passDateInMomentFormatToDateFormat,
+  validateTransactionValue,
 } from "../utils";
 
-export async function addUserFirestore(
-  id: string,
-  email: string
-) {
+export async function addUserFirestore(id: string, email: string) {
   try {
     const docRef = doc(db, "users", id);
     const docSnap = await getDoc(docRef);
@@ -42,7 +40,10 @@ export async function addTransaction(
   const id = await generateTransactionID();
   const description = data.description;
   const date = await passDateInMomentFormatToDateFormat(data.date);
-  const value = data.type == "expense" ? data.value * -100 : data.value * 100;
+  const value =
+    data.type == "expense"
+      ? validateTransactionValue(data.value) * -100
+      : validateTransactionValue(data.value) * 100;
 
   await updateDoc(docRef, {
     transactions: arrayUnion({
