@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../services/firebase";
-import { message } from "antd";
+import { toast } from "react-toastify";
 import { Transaction } from "../types";
 import { useAuth } from "../hooks/useAuth";
 import { Header } from "../components/Header";
@@ -34,7 +34,7 @@ export function DashboardPage() {
     if (user) {
       const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
         if (!doc.exists()) {
-          message.error(`Erro ao carregar dados deste usuário.:`);
+          toast.error(`Erro ao carregar dados deste usuário.:`);
           return handleSignOut();
         }
 

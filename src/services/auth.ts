@@ -1,4 +1,3 @@
-import { message } from "antd";
 import { FirebaseError } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
@@ -6,8 +5,8 @@ import {
   updateProfile,
   signOut,
   sendPasswordResetEmail,
-  User,
 } from "firebase/auth";
+import { toast } from "react-toastify";
 import { auth } from "./firebase";
 import { addUserFirestore } from "./firestore";
 
@@ -16,12 +15,7 @@ export async function login(email: string, password: string) {
     const result = await signInWithEmailAndPassword(auth, email, password);
     return result.user && result.user;
   } catch (err) {
-    const error = err as FirebaseError;
-    console.error(error);
-
-    if (error.code == "auth/invalid-email") {
-      message.error("Email inválido.");
-    }
+    toast.error("Falha na autenticação. Senha ou email incorretos.:");
   }
 }
 
@@ -36,7 +30,7 @@ export async function register(
     if (result.user) {
       await updateProfile(result.user, { displayName });
       await addUserFirestore(result.user.uid, email);
-      message.success("Usuário criado com sucesso.!");
+      toast.success("Usuário criado com sucesso.!");
       return result.user;
     }
   } catch (err) {
@@ -44,11 +38,11 @@ export async function register(
     console.error(error);
 
     if (error.code == "auth/weak-password") {
-      message.error("A senha deve ter pelo menos 6 caracteres.");
+      toast.error("A senha deve ter pelo menos 6 caracteres.:");
     }
 
     if (error.code == "auth/email-already-in-use") {
-      message.error("Este email já está sendo usado.");
+      toast.error("Este email já está sendo usado.:");
     }
 
     return null;
@@ -58,17 +52,17 @@ export async function register(
 export async function forgotPassword(email: string) {
   sendPasswordResetEmail(auth, email)
     .then(() =>
-      message.info("Enviamos a você um e-mail de redefinição de senha.")
+      toast.info("Enviamos a você um e-mail de redefinição de senha.")
     )
     .catch((error) => {
       console.error(error);
 
       if (error.code == "auth/user-not-found") {
-        return message.error("Não encontramos nenhum usuário com este email.:");
+        return toast.error("Não encontramos nenhum usuário com este email.:");
       }
 
       if (error.code == "auth/invalid-email") {
-        return message.error("Email inválido.:");
+        return toast.error("Formato de email inválido.:");
       }
     });
 }

@@ -1,4 +1,5 @@
 import { useForm } from "antd/lib/form/Form";
+import { toast } from "react-toastify";
 import locale from "antd/lib/date-picker/locale/pt_BR";
 import {
   DatePicker,
@@ -6,7 +7,6 @@ import {
   Form,
   Input,
   InputNumber,
-  message,
   Modal,
   Radio,
 } from "antd";
@@ -29,8 +29,8 @@ export function ModalAddTransaction({
 
   async function handleSubmitForm() {
     const fieldValues = form.getFieldsValue() as AddTransactionFormFieldValues;
-    if (fieldValues.value >= 0)
-      return message.warn("Transação sem valor algum.:");
+    if (fieldValues.value <= 0)
+      return toast.warn("Transação sem valor algum.:");
 
     user && addTransaction(user.uid, fieldValues);
     handleCloseModal();

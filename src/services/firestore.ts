@@ -6,8 +6,8 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
+import { toast } from "react-toastify";
 import { db } from "./firebase";
-import { message } from "antd";
 import { AddTransactionFormFieldValues, Transaction } from "../types";
 import {
   generateTransactionID,
@@ -28,7 +28,7 @@ export async function addUserFirestore(id: string, email: string) {
     }
   } catch (error) {
     console.error("Error adding document: ", error);
-    message.error("Erro ao tentar criar base de dados para este usuário..!");
+    toast.error("Erro ao tentar criar base de dados para este usuário..!");
   }
 }
 
