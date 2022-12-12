@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ManLost } from "../assets/ManLost";
 import { Footer } from "../components/Footer";
-import { ArrowBendUpLeft, HouseLine } from "phosphor-react";
+import { ArrowLeft } from "phosphor-react";
 
 export function NotFoundPage() {
   const navigate = useNavigate();
@@ -15,9 +15,8 @@ export function NotFoundPage() {
           onClick={() => navigate("/")}
           className="flex items-center justify-center gap-2 p-2 text-xl text-slate-600 border-2 rounded w-fit mx-auto transition border-slate-600 hover:border-cyan-600 hover:text-cyan-600"
         >
-          <ArrowBendUpLeft size={32} />
-          {"Voltar para a Home"}
-          <HouseLine size={32} />
+          <ArrowLeft size={32} />
+          Voltar ao início
         </button>
       </div>
 
