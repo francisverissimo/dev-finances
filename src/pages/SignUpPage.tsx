@@ -1,9 +1,10 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
+import { useAuth } from "../hooks/useAuth";
 import { Footer } from "../components/Footer";
 import { Logo } from "../components/Logo";
-import { useAuth } from "../hooks/useAuth";
-import { ArrowLeft } from "phosphor-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, CircleNotch } from "phosphor-react";
 
 interface SignUpFieldValues {
   displayName: string;
@@ -13,15 +14,17 @@ interface SignUpFieldValues {
 }
 
 export function SignUpPage() {
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
   const { handleNewAccount } = useAuth();
   const navigate = useNavigate();
 
   async function handleSignUp() {
+    setSubmitLoading(true);
     const { displayName, email, password } =
       form.getFieldsValue() as SignUpFieldValues;
-
     await handleNewAccount(email.trim(), password, displayName.trim());
+    setSubmitLoading(false);
   }
 
   return (
@@ -113,9 +116,13 @@ export function SignUpPage() {
             <Form.Item>
               <button
                 type="submit"
-                className="text-xl text-slate-200 w-full font-medium py-2 px-4 mt-4 bg-slate-600 hover:bg-slate-700 rounded-full transition"
+                className="flex justify-center text-xl text-slate-200 w-full font-medium py-2 px-4 mt-4 bg-slate-600 hover:bg-slate-700 rounded-full transition"
               >
-                Cadastrar
+                {submitLoading ? (
+                  <CircleNotch size={28} className="animate-spin text-xl" />
+                ) : (
+                  "Cadastrar"
+                )}
               </button>
             </Form.Item>
 
@@ -123,6 +130,7 @@ export function SignUpPage() {
               <div className="h-[1px] mb-2 bg-gradient-to-l from-emerald-600 via-emerald-400 to-emerald-200 rounded-md"></div>
 
               <button
+                type="button"
                 onClick={() => navigate("/")}
                 className="w-fit p-2 flex items-center gap-2 text-slate-700 hover:text-emerald-800 font-medium transition"
               >

@@ -55,11 +55,13 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
+      setTimeout(() => {
+        if (user) {
+          setUser(user);
+        } else {
+          setUser(null);
+        }
+      }, 1000);
     });
 
     return () => unsubscribe();

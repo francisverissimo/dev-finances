@@ -1,9 +1,10 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
+import { useAuth } from "../hooks/useAuth";
 import { Footer } from "../components/Footer";
 import { Logo } from "../components/Logo";
-import { useAuth } from "../hooks/useAuth";
-import { User, Lock } from "phosphor-react";
-import { useNavigate } from "react-router-dom";
+import { User, Lock, CircleNotch } from "phosphor-react";
 
 interface LoginPageFieldValues {
   email: string;
@@ -11,13 +12,16 @@ interface LoginPageFieldValues {
 }
 
 export function LogInPage() {
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
   const { handleSignIn } = useAuth();
   const navigate = useNavigate();
 
   async function handleSubmit() {
+    setSubmitLoading(true);
     const { email, password } = form.getFieldsValue() as LoginPageFieldValues;
     await handleSignIn(email.trim(), password);
+    setSubmitLoading(false);
   }
 
   return (
@@ -63,6 +67,7 @@ export function LogInPage() {
             </Form.Item>
 
             <button
+              type="button"
               onClick={() => navigate("/forgot")}
               className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700"
             >
@@ -72,9 +77,13 @@ export function LogInPage() {
             <Form.Item>
               <button
                 type="submit"
-                className="text-xl text-slate-200 w-full font-medium py-2 px-4 bg-slate-600 hover:bg-slate-700 rounded-full transition"
+                className="flex justify-center text-xl text-slate-200 w-full font-medium py-2 px-4 bg-slate-600 hover:bg-slate-700 rounded-full transition"
               >
-                Entrar
+                {submitLoading ? (
+                  <CircleNotch size={28} className="animate-spin text-xl" />
+                ) : (
+                  "Entrar"
+                )}
               </button>
             </Form.Item>
 
@@ -85,6 +94,7 @@ export function LogInPage() {
             </p>
 
             <button
+              type="button"
               onClick={() => navigate("/signup")}
               className="text-slate-700 hover:text-emerald-700 font-medium transition"
             >
