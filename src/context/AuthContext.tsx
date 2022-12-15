@@ -2,7 +2,6 @@ import { createContext, ReactNode, useEffect, useState } from "react";
 import { User } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { login, register, forgotPassword, logout } from "../services/auth";
-import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   user: User | null | undefined;
@@ -24,7 +23,7 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [user, setUser] = useState<User | null>();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   async function handleSignIn(email: string, password: string) {
     const user = await login(email, password);
@@ -40,7 +39,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     if (user) {
       setUser(user);
-      navigate("/");
+      // navigate("/");
     }
   }
 

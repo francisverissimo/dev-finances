@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import { Footer } from "../components/Footer";
 import { Logo } from "../components/Logo";
 import { ArrowLeft, CircleNotch } from "phosphor-react";
 
-export function ForgotPage() {
+interface ForgotPageProps {
+  setPage: (page: "login" | "signup" | "forgot") => void;
+}
+
+export function ForgotPage({ setPage }: ForgotPageProps) {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
   const { handleForgotPassword } = useAuth();
-  const navigate = useNavigate();
 
   async function handleForgot() {
     setSubmitLoading(true);
@@ -69,7 +71,7 @@ export function ForgotPage() {
 
               <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => setPage("login")}
                 className="flex items-center w-fit p-2 gap-2 text-slate-700 hover:text-emerald-800 font-medium transition"
               >
                 <ArrowLeft size={22} /> Voltar para o Login

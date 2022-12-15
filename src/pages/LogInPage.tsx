@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import { Footer } from "../components/Footer";
@@ -11,11 +10,14 @@ interface LoginPageFieldValues {
   password: string;
 }
 
-export function LogInPage() {
+interface LogInPageProps {
+  setPage: (page: "login" | "signup" | "forgot") => void;
+}
+
+export function LogInPage({ setPage }: LogInPageProps) {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
   const { handleSignIn } = useAuth();
-  const navigate = useNavigate();
 
   async function handleSubmit() {
     setSubmitLoading(true);
@@ -68,7 +70,7 @@ export function LogInPage() {
 
             <button
               type="button"
-              onClick={() => navigate("/forgot")}
+              onClick={() => setPage("forgot")}
               className="w-fit self-end font-medium text-slate-600 my-2 cursor-pointer hover:text-teal-700"
             >
               Esqueceu a senha?
@@ -95,8 +97,8 @@ export function LogInPage() {
 
             <button
               type="button"
-              onClick={() => navigate("/signup")}
-              className="text-slate-700 hover:text-emerald-700 font-medium transition"
+              onClick={() => setPage("signup")}
+              className="w-fit p-2 mx-auto text-slate-700 hover:text-emerald-700 font-medium transition"
             >
               Cadastre-se
             </button>

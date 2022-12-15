@@ -18,14 +18,11 @@ import {
 export async function addUserFirestore(id: string, email: string) {
   try {
     const docRef = doc(db, "users", id);
-    const docSnap = await getDoc(docRef);
 
-    if (!docSnap.exists()) {
-      await setDoc(doc(db, "users", id), {
-        email: email,
-        transactions: [],
-      });
-    }
+    await setDoc(docRef, {
+      email: email,
+      transactions: [],
+    });
   } catch (error) {
     console.error("Error adding document: ", error);
     toast.error("Erro ao tentar criar base de dados para este usuário..!");

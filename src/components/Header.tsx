@@ -1,21 +1,22 @@
-import { SignOut } from "phosphor-react";
 import { useAuth } from "../hooks/useAuth";
+import { UserPop } from "./UserPop";
 import { Logo } from "./Logo";
+import userWithoutPhoto from "../assets/user-without-photo.jpg";
 
 export function Header() {
-  const { handleSignOut } = useAuth();
+  const { user } = useAuth();
 
   return (
     <div className="bg-gradient-to-tr from-slate-800 to-slate-600">
       <div className="flex justify-between max-w-xl mx-auto px-4 pt-4 pb-10">
         <Logo className="text-slate-200" />
 
-        <div className="group cursor-pointer px-2" onClick={handleSignOut}>
-          <SignOut
-            className="group transition text-red-700 group-hover:text-red-600"
-            size={32}
+        {user && user.email && (
+          <UserPop
+            name={user.displayName || user.email}
+            avatar={user.photoURL || userWithoutPhoto}
           />
-        </div>
+        )}
       </div>
     </div>
   );

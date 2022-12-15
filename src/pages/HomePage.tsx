@@ -1,6 +1,6 @@
 import { useAuth } from "../hooks/useAuth";
+import { UnauthenticatedPage } from "./UnauthenticatedPage";
 import { DashboardPage } from "./DashboardPage";
-import { LogInPage } from "./LogInPage";
 import { Loading } from "../components/Loading";
 
 export function HomePage() {
@@ -10,6 +10,5 @@ export function HomePage() {
 
   if (user) return <DashboardPage />;
 
-  // unauthenticatedUser
-  return <LogInPage />;
+  return <UnauthenticatedPage />;
 }

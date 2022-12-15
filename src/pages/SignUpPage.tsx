@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Form, Input } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import { Footer } from "../components/Footer";
@@ -13,11 +12,14 @@ interface SignUpFieldValues {
   confirm: string;
 }
 
-export function SignUpPage() {
+interface SignUpPageProps {
+  setPage: (page: "login" | "signup" | "forgot") => void;
+}
+
+export function SignUpPage({ setPage }: SignUpPageProps) {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [form] = Form.useForm();
   const { handleNewAccount } = useAuth();
-  const navigate = useNavigate();
 
   async function handleSignUp() {
     setSubmitLoading(true);
@@ -131,7 +133,7 @@ export function SignUpPage() {
 
               <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => setPage("login")}
                 className="w-fit p-2 flex items-center gap-2 text-slate-700 hover:text-emerald-800 font-medium transition"
               >
                 <ArrowLeft size={22} /> Voltar para o Login

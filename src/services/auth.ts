@@ -5,6 +5,7 @@ import {
   updateProfile,
   signOut,
   sendPasswordResetEmail,
+  User,
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import { auth } from "./firebase";
@@ -69,4 +70,20 @@ export async function forgotPassword(email: string) {
 
 export async function logout() {
   return await signOut(auth).catch((error) => console.error(error));
+}
+
+export async function updateDisplayName(user: User, displayName: string) {
+  return updateProfile(user, { displayName })
+    .then(() => toast.success("Nome atualizado.!"))
+    .catch(() => {
+      toast.error("Não foi possível atualizar seu perfil.:");
+    });
+}
+
+export async function updatePhotoURL(user: User, photoURL: string) {
+  return updateProfile(user, { photoURL })
+    .then(() => toast.success("Perfil atualizado.!"))
+    .catch(() => {
+      toast.error("Não foi possível atualizar seu perfil.:");
+    });
 }
