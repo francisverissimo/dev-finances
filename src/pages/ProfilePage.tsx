@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input } from "antd";
+import { Avatar, Form, Input } from "antd";
 import { useAuth } from "../hooks/useAuth";
 import { updateDisplayName, updatePhotoURL } from "../services/auth";
 import {
@@ -8,6 +8,8 @@ import {
   CircleNotch,
   FloppyDisk,
   PencilSimpleLine,
+  Upload,
+  X,
 } from "phosphor-react";
 import { uploadPhotoProfile } from "../services/storage";
 import userWithoutPhoto from "../assets/user-without-photo.jpg";
@@ -18,18 +20,15 @@ export function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isInputDisabled, setIsInputDisabled] = useState(true);
   const [photo, setPhoto] = useState<string | null>(null);
-
   const [form] = Form.useForm();
-
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleChangePhotoURL(event: ChangeEvent<HTMLInputElement>) {
-    setIsLoading(true);
-
     try {
       const inputImage = event.target.files![0];
 
       if (inputImage && user) {
+        setPhoto(URL.createObjectURL(inputImage));
         const profilePhotoURL = await uploadPhotoProfile(user, inputImage);
         setPhoto(profilePhotoURL);
         await updatePhotoURL(user, profilePhotoURL);
@@ -37,8 +36,6 @@ export function ProfilePage() {
     } catch (error) {
       console.error(error);
     }
-
-    setIsLoading(false);
   }
 
   async function handleChangeDisplayName() {
@@ -90,12 +87,12 @@ export function ProfilePage() {
 
               <div className="p-4 relative">
                 {photo ? (
-                  <img
+                  <Avatar
+                    shape="circle"
+                    size={200}
                     src={photo}
                     alt="Profile Photo"
                     onClick={() => inputRef.current?.click()}
-                    className="max-w-[200px] rounded-full"
-                    referrerPolicy="no-referrer"
                   />
                 ) : (
                   <img
@@ -117,9 +114,9 @@ export function ProfilePage() {
 
                 <div
                   onClick={() => setIsInputDisabled(false)}
-                  className="w-fit rounded-full p-3 text-zinc-100 transition bg-slate-600"
+                  className="w-fit rounded-full p-3 text-zinc-100 transition bg-teal-700"
                 >
-                  <PencilSimpleLine size={22} />
+                  <Upload size={22} />
                 </div>
               </div>
 
@@ -136,15 +133,27 @@ export function ProfilePage() {
               initialValues={{ displayName: user.displayName || "" }}
             >
               <div className="flex gap-2 justify-between">
-                {isInputDisabled && (
+                {isInputDisabled ? (
                   <button
                     type="button"
+                    title="Editar"
                     onClick={() => setIsInputDisabled(false)}
                     className={`${
                       isLoading && "hidden"
                     } w-fit h-fit my-auto text-xl rounded-full p-3 text-zinc-100 transition bg-sky-600 hover:bg-sky-700`}
                   >
                     <PencilSimpleLine size={22} />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    title="Cancelar"
+                    onClick={() => setIsInputDisabled(true)}
+                    className={`${
+                      isLoading && "hidden"
+                    } w-fit h-fit my-auto text-xl rounded-full p-3 text-zinc-100 transition bg-slate-600 hover:bg-slate-700`}
+                  >
+                    <X size={22} />
                   </button>
                 )}
 
@@ -168,6 +177,7 @@ export function ProfilePage() {
                 {!isInputDisabled && (
                   <button
                     type="button"
+                    title="Salvar"
                     onClick={() => form.submit()}
                     className={`${
                       isLoading && "hidden"

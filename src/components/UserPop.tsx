@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { Popover } from "antd";
+import { Avatar, Popover } from "antd";
 import { CaretDown, User, SignOut } from "phosphor-react";
 
 interface UserPopProps {
@@ -40,12 +40,7 @@ export function UserPop({ name, avatar }: UserPopProps) {
       }
     >
       <div className="flex gap-1 items-center justify-center cursor-pointer">
-        <img
-          src={avatar}
-          alt={name}
-          referrerPolicy="no-referrer"
-          className="w-10 rounded-full"
-        />
+        <Avatar size={40} src={avatar} alt={name} />
 
         <CaretDown size={16} className="text-zinc-300" />
       </div>
