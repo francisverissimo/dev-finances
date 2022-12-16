@@ -23,9 +23,8 @@ export function SignUpPage({ setPage }: SignUpPageProps) {
 
   async function handleSignUp() {
     setSubmitLoading(true);
-    const { displayName, email, password } =
-      form.getFieldsValue() as SignUpFieldValues;
-    await handleNewAccount(email.trim(), password, displayName.trim());
+    const { email, password } = form.getFieldsValue() as SignUpFieldValues;
+    await handleNewAccount(email.trim(), password);
     setSubmitLoading(false);
   }
 
@@ -46,19 +45,6 @@ export function SignUpPage({ setPage }: SignUpPageProps) {
             onFinish={handleSignUp}
             className="flex flex-col gap-4"
           >
-            <Form.Item
-              name="displayName"
-              className="m-0"
-              rules={[{ required: true, message: "Campo obrigatório." }]}
-            >
-              <Input
-                size="large"
-                placeholder="Nome"
-                bordered={false}
-                style={{ paddingInline: 0, borderBottom: "2px solid #ccc" }}
-              />
-            </Form.Item>
-
             <Form.Item
               name="email"
               className="m-0"

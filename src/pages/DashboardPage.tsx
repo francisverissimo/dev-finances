@@ -10,6 +10,7 @@ import { TransactionCard } from "../components/TransactionCard";
 import { Numbers } from "../components/Numbers";
 import { Footer } from "../components/Footer";
 import { CircleNotch, Plus } from "phosphor-react";
+import { addUserFirestore } from "../services/firestore";
 
 export function DashboardPage() {
   const [openModalAddTransaction, setOpenModalAddTransaction] = useState(false);
@@ -18,7 +19,7 @@ export function DashboardPage() {
   const [expenses, setExpenses] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, handleSignOut } = useAuth();
+  const { user } = useAuth();
 
   function handleOpenModalAddTransaction() {
     setOpenModalAddTransaction(true);
@@ -33,34 +34,35 @@ export function DashboardPage() {
 
     if (user) {
       const unsub = onSnapshot(doc(db, "users", user.uid), (doc) => {
-        if (!doc.exists()) {
-          toast.error(`Erro ao carregar dados deste usuário.:`);
-          return handleSignOut();
-        }
+        try {
+          let incomeCount = 0;
+          let expenseCount = 0;
+          const data = doc.data() as { transactions: Transaction[] };
 
-        let incomeCount = 0;
-        let expenseCount = 0;
-        const data = doc.data() as { transactions: Transaction[] };
+          if (data.transactions) {
+            setTransactios(
+              data.transactions.sort(
+                (a: Transaction, b: Transaction) =>
+                  b.date.toMillis() - a.date.toMillis()
+              )
+            );
 
-        if (data.transactions) {
-          setTransactios(
-            data.transactions.sort(
-              (a: Transaction, b: Transaction) =>
-                b.date.toMillis() - a.date.toMillis()
-            )
-          );
-
-          for (let i in data.transactions) {
-            if (data.transactions[i].value >= 0) {
-              incomeCount += data.transactions[i].value / 100;
-            } else {
-              expenseCount += data.transactions[i].value / 100;
+            for (let i in data.transactions) {
+              if (data.transactions[i].value >= 0) {
+                incomeCount += data.transactions[i].value / 100;
+              } else {
+                expenseCount += data.transactions[i].value / 100;
+              }
             }
           }
+          setIncomes(incomeCount);
+          setExpenses(expenseCount);
+          setIsLoading(false);
+        } catch (error) {
+          console.error(error);
+          toast.error("Erro inesperado.:!");
+          setIsLoading(false);
         }
-        setIncomes(incomeCount);
-        setExpenses(expenseCount);
-        setIsLoading(false);
       });
 
       return unsub;

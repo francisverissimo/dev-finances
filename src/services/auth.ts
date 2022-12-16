@@ -20,17 +20,11 @@ export async function login(email: string, password: string) {
   }
 }
 
-export async function register(
-  email: string,
-  password: string,
-  displayName: string
-) {
+export async function register(email: string, password: string) {
   try {
     const result = await createUserWithEmailAndPassword(auth, email, password);
 
     if (result.user) {
-      await updateProfile(result.user, { displayName });
-      await addUserFirestore(result.user.uid, email);
       toast.success("Usuário criado com sucesso.!");
       return result.user;
     }
@@ -73,17 +67,13 @@ export async function logout() {
 }
 
 export async function updateDisplayName(user: User, displayName: string) {
-  return updateProfile(user, { displayName })
-    .then(() => toast.success("Nome atualizado.!"))
-    .catch(() => {
-      toast.error("Não foi possível atualizar seu perfil.:");
-    });
+  return updateProfile(user, { displayName }).catch(() => {
+    toast.error("Não foi possível atualizar seu nome de perfil.:");
+  });
 }
 
 export async function updatePhotoURL(user: User, photoURL: string) {
-  return updateProfile(user, { photoURL })
-    .then(() => toast.success("Perfil atualizado.!"))
-    .catch(() => {
-      toast.error("Não foi possível atualizar seu perfil.:");
-    });
+  return updateProfile(user, { photoURL }).catch(() => {
+    toast.error("Não foi possível atualizar sua foto de perfil.:");
+  });
 }

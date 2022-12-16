@@ -15,9 +15,9 @@ import {
   validateTransactionValue,
 } from "../utils";
 
-export async function addUserFirestore(id: string, email: string) {
+export async function addUserFirestore(userId: string, email: string) {
   try {
-    const docRef = doc(db, "users", id);
+    const docRef = doc(db, "users", userId);
 
     await setDoc(docRef, {
       email: email,
@@ -58,4 +58,15 @@ export async function removeTransaction(userId: string, data: Transaction) {
   await updateDoc(docRef, {
     transactions: arrayRemove(data),
   }).catch((error) => console.error(error));
+}
+
+export async function checkUserDocumentExists(userId: string) {
+  try {
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) return true;
+    return false;
+  } catch (error) {
+    console.error(error);
+  }
 }
