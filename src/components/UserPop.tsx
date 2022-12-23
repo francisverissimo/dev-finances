@@ -17,7 +17,7 @@ export function UserPop({ name, avatar }: UserPopProps) {
       placement="bottomRight"
       content={
         <div className="flex flex-col gap-2">
-          <strong className="font-medium text-base text-zinc-600">
+          <strong className="font-medium text-base text-slate-600">
             {name}
           </strong>
 
@@ -42,7 +42,7 @@ export function UserPop({ name, avatar }: UserPopProps) {
       <div className="flex gap-1 items-center justify-center cursor-pointer">
         <Avatar size={40} src={avatar} alt={name} />
 
-        <CaretDown size={16} className="text-zinc-300" />
+        <CaretDown size={16} className="text-slate-300" />
       </div>
     </Popover>
   );

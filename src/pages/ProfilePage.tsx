@@ -114,7 +114,7 @@ export function ProfilePage() {
 
                 <div
                   onClick={() => setIsInputDisabled(false)}
-                  className="w-fit rounded-full p-3 text-zinc-100 transition bg-teal-700"
+                  className="w-fit rounded-full p-3 text-slate-100 transition bg-teal-700"
                 >
                   <Upload size={22} />
                 </div>
@@ -140,7 +140,7 @@ export function ProfilePage() {
                     onClick={() => setIsInputDisabled(false)}
                     className={`${
                       isLoading && "hidden"
-                    } w-fit h-fit my-auto text-xl rounded-full p-3 text-zinc-100 transition bg-sky-600 hover:bg-sky-700`}
+                    } w-fit h-fit my-auto text-xl rounded-full p-3 text-slate-100 transition bg-sky-600 hover:bg-sky-700`}
                   >
                     <PencilSimpleLine size={22} />
                   </button>
@@ -148,10 +148,20 @@ export function ProfilePage() {
                   <button
                     type="button"
                     title="Cancelar"
-                    onClick={() => setIsInputDisabled(true)}
+                    onClick={() => {
+                      setIsInputDisabled(true);
+                      if (user.displayName) {
+                        return form.setFieldValue(
+                          "displayName",
+                          user.displayName
+                        );
+                      }
+
+                      form.setFieldValue("displayName", "");
+                    }}
                     className={`${
                       isLoading && "hidden"
-                    } w-fit h-fit my-auto text-xl rounded-full p-3 text-zinc-100 transition bg-slate-600 hover:bg-slate-700`}
+                    } w-fit h-fit my-auto text-xl rounded-full p-3 text-slate-100 transition bg-slate-600 hover:bg-slate-700`}
                   >
                     <X size={22} />
                   </button>
@@ -181,7 +191,7 @@ export function ProfilePage() {
                     onClick={() => form.submit()}
                     className={`${
                       isLoading && "hidden"
-                    } w-fit h-fit my-auto text-xl p-3 rounded-full text-zinc-100 bg-green-600 hover:bg-green-700 disabled:bg-zinc-400 disabled:cursor-not-allowed disabled:hover:border-transparent disabled:hover:text-zinc-100 transition`}
+                    } w-fit h-fit my-auto text-xl p-3 rounded-full text-slate-100 bg-green-600 hover:bg-green-700 disabled:bg-slate-400 disabled:cursor-not-allowed disabled:hover:border-transparent disabled:hover:text-slate-100 transition`}
                   >
                     <FloppyDisk size={22} />
                   </button>

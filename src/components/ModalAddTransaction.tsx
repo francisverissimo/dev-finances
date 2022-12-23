@@ -122,7 +122,7 @@ export function ModalAddTransaction({
           <button
             type="button"
             onClick={handleCloseModal}
-            className="flex items-center gap-1 bg-red-600 hover:bg-red-700 transition text-xl text-zinc-100 p-2 rounded"
+            className="flex items-center gap-1 bg-red-600 hover:bg-red-700 transition text-xl text-slate-100 p-2 rounded"
           >
             <X size={26} />
             Calcelar
@@ -131,7 +131,7 @@ export function ModalAddTransaction({
           <button
             type="button"
             onClick={() => form.submit()}
-            className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 transition text-xl text-zinc-100 px-4 rounded"
+            className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-700 transition text-xl text-slate-100 px-4 rounded"
           >
             <FloppyDisk size={26} />
             Salvar

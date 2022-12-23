@@ -70,15 +70,15 @@ export function DashboardPage() {
   }, []);
 
   return (
-    <div className="flex flex-col bg-gradient-to-t from-slate-600 via-slate-300 to-slate-300 min-h-screen bg-no-repeat">
+    <div className="flex flex-col bg-slate-300 min-h-screen">
       <Header />
 
-      <div className="max-w-xl flex mx-auto w-full flex-col gap-4 px-4 -translate-y-6">
+      <div className="max-w-xl overflow-hidden flex mx-auto w-full flex-col gap-4 px-4 -translate-y-6">
         <Numbers incomes={incomes} expenses={expenses} loading={isLoading} />
 
         <button
           onClick={handleOpenModalAddTransaction}
-          className="group flex items-center justify-center gap-2 bg-cyan-700 text-zinc-100 text-base rounded-md py-2 px-4 w-fit ml-auto transition hover:bg-cyan-800 hover:shadow-lg"
+          className="group flex items-center justify-center gap-2 bg-cyan-700 text-slate-100 text-base shadow-slate-500 shadow-md rounded-md py-2 px-4 w-fit ml-auto transition hover:bg-cyan-800 hover:shadow-slate-600 hover:shadow-lg"
         >
           <Plus
             size={32}
@@ -87,7 +87,7 @@ export function DashboardPage() {
           Nova Transação
         </button>
 
-        <div className="h-[1px] my-4 bg-gradient-to-r from-slate-900 via-slate-500 to-slate-400 rounded-md"></div>
+        <div className="h-[1px] my-4 bg-gradient-to-r from-slate-600 via-slate-500 to-slate-400 rounded-full"></div>
 
         <div className="flex flex-col gap-4">
           {isLoading ? (
@@ -99,13 +99,10 @@ export function DashboardPage() {
             transactions &&
             transactions.map((transaction) => {
               return (
-                transaction.date.toDate().getMonth() ==
-                  new Date().getMonth() && (
-                  <TransactionCard
-                    key={transaction.id}
-                    transaction={transaction}
-                  />
-                )
+                <TransactionCard
+                  key={transaction.id}
+                  transaction={transaction}
+                />
               );
             })
           )}

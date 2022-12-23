@@ -11,10 +11,11 @@ export function Footer({ className }: FooterProps) {
         <a
           href="https://francissportfolio.vercel.app/"
           target="_blank"
-          className="text-xs font-medium hover:text-cyan-500 transition"
+          className="text-xs font-medium hover:text-cyan-700 transition"
         >
           {` Francis S. Verissimo `}
-        </a> &copy; {new Date().getFullYear()}
+        </a>
+        &copy; {new Date().getFullYear()}
       </span>
     </div>
   );

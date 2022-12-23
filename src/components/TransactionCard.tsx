@@ -28,7 +28,7 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
     confirm({
       content: (
         <>
-          <p className="text-lg text-zinc-600 mt-4">
+          <p className="text-lg text-slate-600 mt-4">
             Deseja apagar{" "}
             <span className="text-red-600">{transaction.description}</span>{" "}
             permanentemente.?
@@ -43,8 +43,8 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
   };
 
   return (
-    <div className="flex flex-col gap-2 bg-slate-200 p-4 rounded-md shadow-lg">
-      <span className="text-zinc-600 text-lg font-medium break-words">
+    <div className="flex flex-col gap-2 bg-slate-200 p-4 rounded-md shadow-xl">
+      <span className="text-slate-600 text-lg font-medium break-words">
         {transaction.description}
       </span>
 
@@ -57,14 +57,15 @@ export function TransactionCard({ transaction }: TransactionCardProps) {
           >
             {valueConvertedToMoney}
           </span>
-          <span className="text-zinc-600 font-medium">
+          <span className="text-slate-600 font-medium">
             {dateConvertedToDate}
           </span>
         </div>
 
         <button
-          className="place-self-end text-red-700 py-1 px-2 border border-transparent transition rounded-full hover:text-red-500 hover:border-red-500"
+          className="place-self-end text-red-700 py-1 px-2 border border-transparent transition rounded-full hover:text-slate-100 hover:bg-red-500"
           onClick={showConfirmDeleteJob}
+          title={`Excluir ${transaction.description}`}
         >
           <TrashSimple size={32} />
         </button>
